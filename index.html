@@ -1,0 +1,90 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes, maximum-scale=1.0">
+  <title>Физический факультет БГУ · Премиум портал</title>
+  <!-- Шрифты и иконки -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:opsz,wght@14..32,400;14..32,500;14..32,600&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+  <!-- Chart.js -->
+  <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.0/dist/chart.umd.min.js"></script>
+  <!-- Основные стили -->
+  <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+
+<!-- ЭКРАН ВХОДА -->
+<div id="loginScreen" class="login-container">
+  <div class="login-card">
+    <div class="login-title">⚛️ Физфак БГУ</div>
+    <div class="login-sub">Подтвердите учётную запись</div>
+    <div class="input-group"><label>Логин</label><input type="text" id="login" value="student@bsu"></div>
+    <div class="input-group"><label>Пароль</label><input type="password" id="password" value="physics2026"></div>
+    <button class="btn-login" id="loginBtn">Зайти <i class="fas fa-arrow-right"></i></button>
+    <button class="btn-google" id="googleLoginBtn"><i class="fab fa-google"></i> Войти через Google</button>
+  </div>
+</div>
+
+<!-- ПОРТАЛ -->
+<div id="portalWrapper" class="portal-wrapper">
+  <nav class="top-nav">
+    <div class="logo-area"><i class="fas fa-atom logo-icon"></i><span>Физический факультет</span></div>
+    <div class="nav-desktop">
+      <button class="nav-btn" id="accountBtn"><i class="fas fa-user-circle"></i> Аккаунт</button>
+      <button class="nav-btn" id="testsBtn"><i class="fas fa-file-alt"></i> Тесты</button>
+      <button class="nav-btn" id="deanInfoBtn"><i class="fas fa-graduation-cap"></i> Деканат</button>
+    </div>
+    <button class="mobile-menu-btn" id="mobileMenuToggle"><i class="fas fa-bars"></i></button>
+    <div class="mobile-menu" id="mobileMenu">
+      <button class="nav-btn mobile-nav" data-action="account"><i class="fas fa-user-circle"></i> Аккаунт</button>
+      <button class="nav-btn mobile-nav" data-action="tests"><i class="fas fa-file-alt"></i> Тесты</button>
+      <button class="nav-btn mobile-nav" data-action="dean"><i class="fas fa-graduation-cap"></i> Деканат</button>
+    </div>
+  </nav>
+
+  <div class="dashboard-grid">
+    <div class="departments-card">
+      <div class="section-header"><i class="fas fa-microscope"></i><h2>Кафедры</h2></div>
+      <div class="dep-grid">
+        <div class="dep-item" data-dept="general"><i class="fas fa-flask"></i> Общей физики</div>
+        <div class="dep-item" data-dept="comp"><i class="fas fa-laptop-code"></i> Компьютерная физика</div>
+        <div class="dep-item" data-dept="math"><i class="fas fa-square-root-alt"></i> Математическая физика</div>
+        <div class="dep-item" data-dept="bio"><i class="fas fa-dna"></i> Биофизика</div>
+      </div>
+    </div>
+    <div class="schedule-card">
+      <div class="section-header"><i class="fas fa-calendar-alt"></i><h2>Расписание</h2></div>
+      <div class="schedule-header">
+        <div class="date-control">
+          <button id="prevDayBtn"><i class="fas fa-chevron-left"></i></button>
+          <span class="current-date" id="currentDateDisplay"></span>
+          <button id="nextDayBtn"><i class="fas fa-chevron-right"></i></button>
+        </div>
+      </div>
+      <div class="schedule-list" id="scheduleList"></div>
+    </div>
+  </div>
+
+  <div class="grades-section">
+    <div class="section-header"><i class="fas fa-chart-bar"></i><h2>Успеваемость</h2></div>
+    <div class="chart-wrapper"><canvas id="gradesChart"></canvas></div>
+  </div>
+</div>
+
+<!-- МОДАЛКИ -->
+<!-- Кафедра -->
+<div id="deptModal" class="modal-overlay"><div class="modal"><div class="modal-header"><h3 id="deptModalTitle"></h3><button class="close-modal" onclick="closeModal('deptModal')"><i class="fas fa-times"></i></button></div><div id="deptHeraldry" class="dept-heraldry"></div><div id="deptHistory"></div><div id="deptPartners" style="margin-top:18px;"></div><h4 style="margin:28px 0 16px;">Специальности</h4><div id="specialtyContainer" class="specialty-list"></div><div id="specialtyDetailPanel" class="specialty-detail" style="display:none;"></div></div></div>
+<!-- Аккаунт -->
+<div id="accountModal" class="modal-overlay"><div class="modal"><div class="modal-header"><h3><i class="fas fa-user-astronaut"></i> Профиль</h3><button class="close-modal" onclick="closeModal('accountModal')"><i class="fas fa-times"></i></button></div><div class="profile-header"><img src="https://i.pravatar.cc/150?img=12" class="profile-avatar"><div class="profile-fields"><input type="text" id="editName" class="elegant-input" placeholder="Имя" value="Иван Петров"><input type="text" id="editGroup" class="elegant-input" placeholder="Группа" value="Ф-31"><input type="email" id="editEmail" class="elegant-input" placeholder="Email" value="ivan.petrov@physics.bsu.by"></div></div><button class="btn-primary" id="saveProfileBtn"><i class="fas fa-save"></i> Сохранить</button><div class="theme-row"><span class="theme-label" id="themeLabel"><i class="fas fa-moon"></i> Тёмная тема</span><label class="switch"><input type="checkbox" id="themeToggle"><span class="slider"></span></label></div></div></div>
+<!-- Тесты -->
+<div id="testsModal" class="modal-overlay"><div class="modal"><div class="modal-header"><h3 id="testModalTitle"><i class="fas fa-pencil-alt"></i> Тесты и контрольные</h3><button class="close-modal" onclick="closeModal('testsModal'); resetTestMode();"><i class="fas fa-times"></i></button></div><div id="testListContainer"><div class="test-list-item" data-test="quant"><strong>📘 Квантовая механика</strong><br><small>15 апреля · 10 вопросов</small></div><div class="test-list-item" data-test="electro"><strong>📙 Электродинамика</strong><br><small>18 апреля · 8 вопросов</small></div><div class="test-list-item" data-test="mathphys"><strong>📗 Методы мат. физики</strong><br><small>22 апреля · 12 вопросов</small></div></div><div id="quizContainer" style="display:none;"></div></div></div>
+<!-- Деканат -->
+<div id="deanModal" class="modal-overlay"><div class="modal"><div class="modal-header"><h3><i class="fas fa-building"></i> Деканат · курсы</h3><button class="close-modal" onclick="closeModal('deanModal')"><i class="fas fa-times"></i></button></div><div class="year-cards" id="yearCardsContainer"></div><div id="deanInfoContent" class="dean-detail"></div></div></div>
+
+<!-- Основной скрипт -->
+<script src="script.js"></script>
+</body>
+</html>
